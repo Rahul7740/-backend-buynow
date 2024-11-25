@@ -3,9 +3,6 @@ const ProductModel = (sequelize, DataTypes) => {
     title: {
       type: DataTypes.STRING,
     },
-    price: {
-      type: DataTypes.STRING,
-    },
     image: {
       type: DataTypes.STRING,
     },
@@ -21,6 +18,12 @@ const ProductModel = (sequelize, DataTypes) => {
     size: {
       type: DataTypes.JSON,
     },
+    brand:{
+      type:DataTypes.STRING
+    },
+    colorsSelect:{
+      type:DataTypes.JSON
+    },
     colors: {
       type: DataTypes.JSON,
     },
@@ -30,18 +33,13 @@ const ProductModel = (sequelize, DataTypes) => {
     speacialFeature: {
       type: DataTypes.STRING,
     },
-    weight: {
-      type: DataTypes.STRING,
-    },
     conoatibleDevices: {
       type: DataTypes.STRING,
     },
     reviews: {
       type: DataTypes.JSON,
     },
-    all:{
-      type:DataTypes.JSON
-    }
+    
   });
 };
 export default ProductModel;

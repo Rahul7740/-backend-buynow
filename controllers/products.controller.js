@@ -4,19 +4,18 @@ export const createProducts = async (req, res) => {
   try {
     const {
       title,
-      price,
       image,
       designRatting,
       designInstock,
       description,
       size,
+      brand,
+      colorsSelect,
       colors,
       styleName,
-      speacialFeature,
-      weight,
+      speacialFeature, 
       conoatibleDevices,
       reviews,
-      all,
     } = req.body;
     const checkProduct = await db.Products.findOne({ where: { title: title } });
     if (checkProduct) {
@@ -24,19 +23,18 @@ export const createProducts = async (req, res) => {
     }
     const data = await db.Products.create({
       title,
-      price,
       image,
       designRatting,
       designInstock,
       description,
       size,
+      brand,
+      colorsSelect,
       colors,
       styleName,
       speacialFeature,
-      weight,
       conoatibleDevices,
       reviews,
-      all
     });
     res.status(200).json(data);
   } catch (error) {
