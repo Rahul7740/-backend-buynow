@@ -4,6 +4,9 @@ const cartModel = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       primaryKey: true,
     },
+    qty: {
+      type: DataTypes.STRING,
+    },
   });
 };
 export default cartModel;
