@@ -13,18 +13,21 @@ export const createUser = async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
-    const checkName = await db.User.findOne({ where: { name: name } });
     const checkEmail = await db.User.findOne({ where: { email: email } });
-    if (checkName) {
-      return res.status(404).json({ error: "user name already exists" });
-    } else if (checkEmail) {
+    if (checkEmail) {
       return res.status(404).json({ error: "user email already exists" });
     }
     await emailSchema.validate({ email });
     await passwordSchema.validate({ password });
     const selt = await bcrypt.genSalt(10);
     const hashedPass = await bcrypt.hash(password, selt);
-    const data = await db.User.create({ name, email, password: hashedPass });
+    let fullName = name.split(" ");
+    const data = await db.User.create({
+      firstName: fullName[0],
+      lastName: fullName[1],
+      email,
+      password: hashedPass,
+    });
     const token = generateToken(data);
     res.status(200).json({ data, token });
   } catch (error) {
@@ -141,5 +144,53 @@ export const ResetPass = async (req, res) => {
     res.status(200).json({ message: "update sucessfully", token });
   } catch (error) {
     res.status(400).json({ error: error.message });
+  }
+};
+
+export const updateUserAllData = async (req, res) => {
+  try {
+    const {
+      firstName,
+      lastName,
+      email,
+      mobileNo,
+      address,
+      secondAddress,
+      State,
+      Gender,
+    } = req.body;
+    const checkEmail = await db.User.findOne({ where: { email: email } });
+    if (!checkEmail) {
+      return res.status(400).json({ error: "check your email" });
+    }
+    await db.User.update(
+      {
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        mobileNo: mobileNo,
+        address: address,
+        secondAddress: secondAddress,
+        State: State,
+        Gender: Gender,
+      },
+      { where: { id: checkEmail.id } }
+    );
+    res.status(200).json({ message: "update succesfully" });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+export const getSingleUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const checkId = await db.User.findOne({ where: { id: id } });
+    if (!checkId) {
+      return res.status(444).json({ error: "productsId is not avalible" });
+    }
+    res.status(200).json(checkId);
+  } catch (error) {
+    res.status(404).json({ error: error.message });
   }
 };
