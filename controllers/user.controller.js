@@ -47,9 +47,9 @@ export const updateUser = async (req, res) => {
     if (checkNewPass) {
       return res
         .status(404)
-        .json({error:"New password cannot be the same as the old password"});
+        .json({ error: "New password cannot be the same as the old password" });
     }
-    await passwordSchema.validate({ password:newPassword });
+    await passwordSchema.validate({ password: newPassword });
     const hashnewPass = await bcrypt.hash(newPassword, 10);
 
     const userData = await db.User.update(
@@ -92,11 +92,12 @@ export const loginUser = async (req, res) => {
     if (!checkEmail) {
       return res.status(404).json({ error: "please enter valid email" });
     }
+
     const passCheck = await bcrypt.compare(password, checkEmail.password);
     if (!passCheck) {
       return res.status(404).json({ error: "wrong password" });
     }
-    res.status(202).json({ message: "login successful" });
+    res.status(202).json({ message: "login successful", data: checkEmail });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -104,17 +105,16 @@ export const loginUser = async (req, res) => {
 
 export const emailCheck = async (req, res) => {
   try {
-    const { email } = req.body
+    const { email } = req.body;
     const checkEmail = await db.User.findOne({ where: { email: email } });
     if (!checkEmail) {
       return res.status(404).json({ error: "email does not exists" });
     }
     res.status(200).json({ message: "email exists" });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
   }
-  catch (error) {
-    res.status(400).json({ error: error.message })
-  }
-}
+};
 
 export const ResetPass = async (req, res) => {
   try {
@@ -123,14 +123,14 @@ export const ResetPass = async (req, res) => {
     if (!checkUser) {
       return res.status(400).json({ error: "check your email" });
     }
-   
+
     const checkNewPass = await bcrypt.compare(newPassword, checkUser.password);
     if (checkNewPass) {
       return res
         .status(404)
-        .json({error:"New password cannot be the same as the old password"});
+        .json({ error: "New password cannot be the same as the old password" });
     }
-    await passwordSchema.validate({ password:newPassword });
+    await passwordSchema.validate({ password: newPassword });
     const hashnewPass = await bcrypt.hash(newPassword, 10);
 
     const userData = await db.User.update(
@@ -142,4 +142,4 @@ export const ResetPass = async (req, res) => {
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
-}; 
+};
