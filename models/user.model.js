@@ -6,6 +6,9 @@ const UserModel = (sequelize, DataTypes) => {
     lastName: {
       type: DataTypes.STRING,
     },
+    profile: {
+      type: DataTypes.STRING,
+    },
     email: {
       type: DataTypes.STRING,
     },
@@ -27,9 +30,9 @@ const UserModel = (sequelize, DataTypes) => {
     State: {
       type: DataTypes.STRING,
     },
-    Gender:{
-      type:DataTypes.STRING
-    }
+    Gender: {
+      type: DataTypes.STRING,
+    },
   });
 };
 export default UserModel;

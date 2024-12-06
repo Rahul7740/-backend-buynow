@@ -194,3 +194,18 @@ export const getSingleUser = async (req, res) => {
     res.status(404).json({ error: error.message });
   }
 };
+
+export const UpdateProfile = async (req, res) => {
+  try {
+    const { email, profile } = req.body;
+
+    const checkId = await db.User.findOne({ where: { email: email } });
+    if (!checkId) {
+      return res.status(444).json({ error: "email not exist" });
+    }
+    await db.User.update({ profile }, { where: { email } });
+    res.status(200).json({ message: "upload sucessfully", email, profile });
+  } catch (error) {
+    res.status(404).json({ error: error.message });
+  }
+};

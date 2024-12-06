@@ -2,7 +2,7 @@ import express from "express";
 import MainRouter from "./routes/MainRouter.js";
 import cors from "cors";
 
-import fs from "fs"
+import fs from "fs";
 
 const app = express();
 app.use(express.json());
@@ -15,10 +15,16 @@ app.listen(PORT, () => {
 });
 
 // fs.writeFileSync("./abc.txt" , "ahsdfdfk")
-// let abc =  fs.readFileSync("./abc.txt" , "utf-8") 
+// let abc =  fs.readFileSync("./abc.txt" , "utf-8")
 // console.log(abc);
 
-// let sync =  fs.readFileSync("./abc.txt" , "utf-8",(err,data)=>{}) 
+// let sync =  fs.readFileSync("./abc.txt" , "utf-8",(err,data)=>{})
 
 // console.log(sync , "<==========");
+
+// class abc {
+
+// }
+// console.log(typeof abc);
+
 

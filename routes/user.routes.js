@@ -1,19 +1,58 @@
-import express from 'express';
-import { createUser, deleteUser, emailCheck, getSingleUser, getUser, loginUser, ResetPass, updateUser, updateUserAllData } from '../controllers/user.controller.js';
+import express from "express";
+import multer from "multer";
+import path from "path";
+import fs from "fs";
+import {
+  createUser,
+  deleteUser,
+  emailCheck,
+  getSingleUser,
+  getUser,
+  loginUser,
+  ResetPass,
+  UpdateProfile,
+  updateUser,
+  updateUserAllData,
+} from "../controllers/user.controller.js";
 
-const router = express.Router()
+const router = express.Router();
 
-router.post("/create", createUser)
-router.post("/login", loginUser)
-router.post("/emailCheck",emailCheck)
-router.put("/update", updateUser)
-router.put("/passupdate", ResetPass)
-router.put("/updateAllData" , updateUserAllData)
-router.delete("/delete/:id", deleteUser)
-router.get("/get", getUser)
-router.get("/getSingleUser/:id",getSingleUser)
+const dir = path.join(process.cwd(), "uploads");
+if (!fs.existsSync(dir)) {
+  fs.mkdirSync(dir);
+}
 
-export default router
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, dir);
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix =
+      file.fieldname +
+      Date.now() +
+      "-" +
+      Math.round(Math.random() * 1e9) +
+      "-" +
+      file.originalname;
+    req.body.profile = uniqueSuffix;
+    cb(null, uniqueSuffix);
+  },
+});
+
+const upload = multer({ storage });
+
+router.post("/create", createUser);
+router.post("/uploadProfile", upload.single("profile"), UpdateProfile);
+router.post("/login", loginUser);
+router.post("/emailCheck", emailCheck);
+router.put("/update", updateUser);
+router.put("/passupdate", ResetPass);
+router.put("/updateAllData", updateUserAllData);
+router.delete("/delete/:id", deleteUser);
+router.get("/get", getUser);
+router.get("/getSingleUser/:id", getSingleUser);
+
+export default router;
 
 /**
 =======register: ,createUser=======
