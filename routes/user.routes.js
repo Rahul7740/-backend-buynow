@@ -34,7 +34,6 @@ const storage = multer.diskStorage({
       Math.round(Math.random() * 1e9) +
       "-" +
       file.originalname;
-    req.body.profile = uniqueSuffix;
     cb(null, uniqueSuffix);
   },
 });

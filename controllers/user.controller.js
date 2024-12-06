@@ -195,17 +195,42 @@ export const getSingleUser = async (req, res) => {
   }
 };
 
+// export const UpdateProfile = async (req, res) => {
+//   try {
+//     const { email, profile } = req.body;
+
+//     const checkId = await db.User.findOne({ where: { email: email } });
+//     if (!checkId) {
+//       return res.status(444).json({ error: "email not exist" });
+//     }
+//     await db.User.update({ profile }, { where: { email } });
+//     res.status(200).json({ message: "upload sucessfully", email, profile });
+//   } catch (error) {
+//     res.status(404).json({ error: error.message });
+//   }
+// };
+
 export const UpdateProfile = async (req, res) => {
   try {
-    const { email, profile } = req.body;
+    const { email } = req.body;
 
-    const checkId = await db.User.findOne({ where: { email: email } });
-    if (!checkId) {
-      return res.status(444).json({ error: "email not exist" });
+    const user = await db.User.findOne({ where: { email } });
+    if (!user) {
+      return res.status(404).json({ error: "Email does not exist" });
     }
-    await db.User.update({ profile }, { where: { email } });
-    res.status(200).json({ message: "upload sucessfully", email, profile });
+
+    const profilePath = req.file ? req.file.filename : null;
+    if (!profilePath) {
+      return res.status(400).json({ error: "File upload failed" });
+    }
+
+    await db.User.update({ profile: profilePath }, { where: { email } });
+    res.status(200).json({
+      message: "Upload successful",
+      email,
+      profile: profilePath,
+    });
   } catch (error) {
-    res.status(404).json({ error: error.message });
+    res.status(500).json({ error: error.message });
   }
 };
